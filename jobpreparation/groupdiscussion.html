@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Group Discussion | CareerPrep Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #e63946;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7ff, #e6e9ff);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .logo i {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e11570;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(247, 37, 133, 0.3);
+        }
+
+        /* Main Content */
+        .gd-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .gd-main {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .gd-sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        .topic-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--primary);
+        }
+
+        .topic-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-source {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .topic-description {
+            line-height: 1.6;
+        }
+
+        /* Discussion Area */
+        .discussion-area {
+            height: 500px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: var(--accent);
+        }
+
+        .message.ai .message-avatar {
+            background: var(--primary);
+        }
+
+        .message-content {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            max-width: 70%;
+            position: relative;
+        }
+
+        .message.user .message-content {
+            background: var(--light);
+            border: 1px solid var(--light-gray);
+        }
+
+        .message-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: var(--primary);
+        }
+
+        .message.user .message-name {
+            color: var(--accent);
+            text-align: right;
+        }
+
+        .message-text {
+            line-height: 1.5;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+        }
+
+        .message.user .message-time {
+            text-align: right;
+        }
+
+        /* Input Area */
+        .input-area {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            resize: none;
+            transition: var(--transition);
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Voice Input */
+        .voice-input-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .voice-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .voice-btn:hover {
+            background: #5e08a0;
+            transform: translateY(-2px);
+        }
+
+        .voice-btn.recording {
+            background: var(--danger);
+            animation: pulse 1.5s infinite;
+        }
+
+        .voice-feedback {
+            flex: 1;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 10px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            font-style: italic;
+            color: var(--gray);
+        }
+
+        /* Participants */
+        .participants-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .participant {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background: var(--light);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .participant:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .participant-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .participant-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .participant-info p {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+
+        .participant-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+
+        .status-online {
+            background: var(--success);
+        }
+
+        .status-speaking {
+            background: var(--accent);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .feature-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.8rem;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .feature-card h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .feature-card p {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+
+        /* Timer */
+        .timer-container {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .timer-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .timer-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .timer-btn.reset {
+            background: var(--danger);
+        }
+
+        .timer-btn.reset:hover {
+            background: #c1121f;
+        }
+
+        /* Topic Selector */
+        .topic-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .topic-select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 1px solid var(--light-gray);
+            background: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.5s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        .notification.warning {
+            background: var(--warning);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes typing {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+            width: fit-content;
+            box-shadow: var(--shadow);
+            margin-bottom: 10px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .gd-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .participants-list, .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-comments"></i>
+                    <span>CareerPrep Pro</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#" class="active">Group Discussion</a></li>
+                        <li><a href="#">Mock Interviews</a></li>
+                        <li><a href="#">Resources</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline">Login</button>
+                    <button class="btn btn-primary">Sign Up</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="gd-container">
+            <!-- Discussion Area -->
+            <div class="gd-main">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i>
+                    AI-Powered Group Discussion
+                </h2>
+
+                <!-- Topic Selector -->
+                <div class="topic-selector">
+                    <select class="topic-select" id="topic-select">
+                        <option value="ai-employment">The Impact of Artificial Intelligence on Future Employment</option>
+                        <option value="remote-work">The Future of Remote Work and Hybrid Models</option>
+                        <option value="sustainability">Corporate Sustainability and ESG Initiatives</option>
+                        <option value="data-privacy">Data Privacy in the Age of Big Tech</option>
+                        <option value="diversity">Diversity and Inclusion in Tech Companies</option>
+                        <option value="crypto">The Role of Cryptocurrency in Global Finance</option>
+                        <option value="metaverse">The Metaverse: Next Frontier or Passing Trend?</option>
+                    </select>
+                </div>
+
+                <!-- Topic Card -->
+                <div class="topic-card" id="topic-card">
+                    <h3 class="topic-title">The Impact of Artificial Intelligence on Future Employment</h3>
+                    <p class="topic-source">Topic Source: Google, Microsoft, Amazon</p>
+                    <p class="topic-description">This discussion focuses on how AI and automation will transform the job market, which roles will be most affected, and how society should prepare for these changes. Participants should consider both positive and negative impacts.</p>
+                </div>
+
+                <!-- Voice Input -->
+                <div class="voice-input-container">
+                    <button class="voice-btn" id="voice-btn">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <div class="voice-feedback" id="voice-feedback">
+                        Click the microphone button to start voice input
+                    </div>
+                </div>
+
+                <!-- Discussion Area -->
+                <div class="discussion-area" id="discussion-area">
+                    <!-- Messages will be dynamically added here -->
+                    <div class="message ai">
+                        <div class="message-avatar">P1</div>
+                        <div class="message-content">
+                            <div class="message-name">Person 1 (AI)</div>
+                            <div class="message-text">I believe AI will create more jobs than it displaces, similar to previous technological revolutions. While some routine tasks may be automated, new roles in AI management, ethics, and development will emerge.</div>
+                            <div class="message-time">10:02 AM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="message ai">
+                        <div class="message-avatar">P2</div>
+                        <div class="message-content">
+                            <div class="message-name">Person 2 (AI)</div>
+                            <div class="message-text">That's an optimistic view, but we must consider the transition period. Many workers in manufacturing, data entry, and even some white-collar jobs may face unemployment before these new roles materialize.</div>
+                            <div class="message-time">10:04 AM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="typing-indicator" id="typing-indicator" style="display: none;">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <textarea class="message-input" id="message-input" placeholder="Type your opinion here... (Minimum 50 characters)" rows="3"></textarea>
+                    <button class="send-btn" id="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="gd-sidebar">
+                <!-- Participants -->
+                <div>
+                    <h3 class="section-title">
+                        <i class="fas fa-user-friends"></i>
+                        Participants (10)
+                    </h3>
+                    <div class="participants-list" id="participants-list">
+                        <!-- Participants will be dynamically added here -->
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div>
+                    <h3 class="section-title">
+                        <i class="fas fa-star"></i>
+                        Features
+                    </h3>
+                    <div class="features-grid">
+                        <div class="feature-card" id="voice-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <h4>Voice Input</h4>
+                            <p>Use voice to participate</p>
+                        </div>
+                        <div class="feature-card" id="analysis-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h4>Performance Analysis</h4>
+                            <p>Get feedback on your participation</p>
+                        </div>
+                        <div class="feature-card" id="transcript-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <h4>Save Transcript</h4>
+                            <p>Download the discussion</p>
+                        </div>
+                        <div class="feature-card" id="hint-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h4>Get Hints</h4>
+                            <p>Receive discussion pointers</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timer -->
+                <div class="timer-container">
+                    <h3 class="section-title">
+                        <i class="fas fa-clock"></i>
+                        Discussion Timer
+                    </h3>
+                    <div class="timer-display" id="timer-display">15:00</div>
+                    <div class="timer-controls">
+                        <button class="timer-btn" id="start-timer">Start</button>
+                        <button class="timer-btn" id="pause-timer">Pause</button>
+                        <button class="timer-btn reset" id="reset-timer">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-bell"></i>
+        <span id="notification-text">Welcome to the Group Discussion!</span>
+    </div>
+
+    <script>
+        // DOM Elements
+        const discussionArea = document.getElementById('discussion-area');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const participantsList = document.getElementById('participants-list');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notification-text');
+        const timerDisplay = document.getElementById('timer-display');
+        const startTimerBtn = document.getElementById('start-timer');
+        const pauseTimerBtn = document.getElementById('pause-timer');
+        const resetTimerBtn = document.getElementById('reset-timer');
+        const voiceBtn = document.getElementById('voice-btn');
+        const voiceFeedback = document.getElementById('voice-feedback');
+        const topicSelect = document.getElementById('topic-select');
+        const topicCard = document.getElementById('topic-card');
+
+        // GD Data
+        const participants = [
+            { id: 1, name: "Person 1", role: "AI Participant", status: "online" },
+            { id: 2, name: "Person 2", role: "AI Participant", status: "online" },
+            { id: 3, name: "Person 3", role: "AI Participant", status: "online" },
+            { id: 4, name: "Person 4", role: "AI Participant", status: "online" },
+            { id: 5, name: "Person 5", role: "AI Participant", status: "online" },
+            { id: 6, name: "Person 6", role: "AI Participant", status: "online" },
+            { id: 7, name: "Person 7", role: "AI Participant", status: "online" },
+            { id: 8, name: "Person 8", role: "AI Participant", status: "online" },
+            { id: 9, name: "Person 9", role: "AI Participant", status: "online" },
+            { id: 10, name: "Person 10", role: "AI Participant", status: "online" }
+        ];
+
+        // Topics data
+        const topics = {
+            "ai-employment": {
+                title: "The Impact of Artificial Intelligence on Future Employment",
+                source: "Google, Microsoft, Amazon",
+                description: "This discussion focuses on how AI and automation will transform the job market, which roles will be most affected, and how society should prepare for these changes. Participants should consider both positive and negative impacts."
+            },
+            "remote-work": {
+                title: "The Future of Remote Work and Hybrid Models",
+                source: "Meta, Twitter, Salesforce",
+                description: "Discuss the long-term implications of remote and hybrid work models on productivity, company culture, and employee well-being. Consider how different industries are adapting to this new normal."
+            },
+            "sustainability": {
+                title: "Corporate Sustainability and ESG Initiatives",
+                source: "Tesla, Patagonia, Unilever",
+                description: "Examine the role of corporations in addressing climate change and social issues. Are current ESG initiatives effective, or are they primarily for public relations? How can companies balance profit with purpose?"
+            },
+            "data-privacy": {
+                title: "Data Privacy in the Age of Big Tech",
+                source: "Apple, Facebook, Google",
+                description: "Debate the balance between personalized services and user privacy. How should companies handle user data, and what regulations are needed to protect consumers while fostering innovation?"
+            },
+            "diversity": {
+                title: "Diversity and Inclusion in Tech Companies",
+                source: "Microsoft, Intel, IBM",
+                description: "Analyze the progress and challenges in creating diverse and inclusive workplaces in the technology sector. What strategies are most effective, and how can companies measure real impact beyond representation numbers?"
+            },
+            "crypto": {
+                title: "The Role of Cryptocurrency in Global Finance",
+                source: "Coinbase, Binance, PayPal",
+                description: "Discuss the potential of cryptocurrencies and blockchain technology to transform traditional financial systems. Consider regulatory challenges, environmental concerns, and adoption barriers."
+            },
+            "metaverse": {
+                title: "The Metaverse: Next Frontier or Passing Trend?",
+                source: "Meta, Microsoft, NVIDIA",
+                description: "Evaluate the potential of the metaverse to become the next computing platform. What are the practical applications beyond gaming, and what challenges need to be overcome for widespread adoption?"
+            }
+        };
+
+        // AI Messages organized by topic
+        const aiMessagesByTopic = {
+            "ai-employment": [
+                "I believe AI will create more jobs than it displaces, similar to previous technological revolutions.",
+                "That's an optimistic view, but we must consider the transition period for workers.",
+                "We should focus on reskilling programs to prepare the workforce for AI-driven changes.",
+                "AI could exacerbate inequality if access to education and training isn't equitable.",
+                "In healthcare, AI is already improving diagnostics and treatment plans significantly.",
+                "But what about jobs that require human empathy and connection? AI can't replace those.",
+                "We need strong regulations to ensure ethical AI development and deployment.",
+                "Countries that embrace AI early will have a competitive advantage in the global economy.",
+                "The education system needs a complete overhaul to prepare students for an AI world.",
+                "AI could help solve complex global challenges like climate change and disease outbreaks.",
+                "We shouldn't overlook the potential for AI bias and discrimination in hiring and other areas.",
+                "Universal basic income might be necessary if AI leads to widespread job displacement.",
+                "The creative industries will also be transformed by AI tools for art, music, and writing.",
+                "We need to consider the psychological impact of working alongside AI systems.",
+                "Small businesses might struggle to adopt AI, widening the gap with large corporations."
+            ],
+            "remote-work": [
+                "Remote work has increased productivity for many knowledge workers.",
+                "But we're losing the spontaneous creativity that comes from in-person collaboration.",
+                "Hybrid models seem to offer the best of both worlds if implemented correctly.",
+                "Companies need to invest in proper remote work infrastructure and training.",
+                "Remote work has opened up opportunities for talent in rural areas and developing countries.",
+                "The 'digital nomad' trend raises questions about taxation and legal jurisdiction.",
+                "We need to address the mental health challenges of remote work and isolation.",
+                "Middle managers are struggling to adapt to managing remote teams effectively.",
+                "Commercial real estate is facing a major disruption due to remote work trends.",
+                "Remote work could significantly reduce carbon emissions from commuting.",
+                "Not all jobs can be done remotely - we need to consider service and manufacturing workers.",
+                "The future might be 'remote-first' with occasional in-person gatherings for team building.",
+                "We need to establish clearer boundaries between work and personal life in remote settings.",
+                "Remote work could help address urban overcrowding and high cost of living in cities.",
+                "Companies are using digital surveillance tools to monitor remote workers, raising privacy concerns."
+            ],
+            "sustainability": [
+                "ESG initiatives are crucial for long-term business viability and risk management.",
+                "Many companies are guilty of 'greenwashing' - making sustainability claims without real action.",
+                "Sustainable practices can actually reduce costs and improve efficiency in the long run.",
+                "Investors are increasingly prioritizing companies with strong ESG performance.",
+                "We need standardized metrics to accurately measure corporate sustainability efforts.",
+                "Sustainability shouldn't be just a PR strategy but integrated into core business operations.",
+                "Regulations are necessary to ensure companies follow through on their sustainability promises.",
+                "Smaller companies often struggle with the resources needed for comprehensive ESG programs.",
+                "Consumer demand for sustainable products is driving real change in many industries.",
+                "The focus on environmental issues sometimes overshadows the social and governance aspects of ESG.",
+                "Sustainable supply chains are complex but essential for true corporate responsibility.",
+                "There's a tension between short-term shareholder returns and long-term sustainability goals.",
+                "Innovation in clean technology is creating new business opportunities in sustainability.",
+                "Employees, especially younger generations, prefer to work for companies with strong ESG values.",
+                "We need global cooperation to address sustainability challenges that cross borders."
+            ]
+            // Additional topics would follow the same pattern
+        };
+
+        // Voice recognition variables
+        let recognition;
+        let isListening = false;
+        let finalTranscript = '';
+
+        // Timer Variables
+        let timerInterval;
+        let timerRunning = false;
+        let timeLeft = 15 * 60; // 15 minutes in seconds
+
+        // Initialize the application
+        function init() {
+            renderParticipants();
+            startAIDiscussion();
+            setupEventListeners();
+            setupVoiceRecognition();
+            showNotification("Group Discussion started! AI participants will share their opinions.");
+        }
+
+        // Setup voice recognition
+        function setupVoiceRecognition() {
+            // Check if browser supports speech recognition
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+                
+                recognition.onstart = function() {
+                    isListening = true;
+                    voiceBtn.classList.add('recording');
+                    voiceFeedback.textContent = "Listening... Speak now";
+                };
+                
+                recognition.onresult = function(event) {
+                    let interimTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
+                            finalTranscript += event.results[i][0].transcript;
+                        } else {
+                            interimTranscript += event.results[i][0].transcript;
+                        }
+                    }
+                    
+                    voiceFeedback.textContent = finalTranscript || interimTranscript || "Listening... Speak now";
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    isListening = false;
+                    voiceBtn.classList.remove('recording');
+                    
+                    if (event.error === 'not-allowed') {
+                        voiceFeedback.textContent = "Microphone access denied. Please allow microphone access.";
+                        showNotification("Microphone access is required for voice input.", "error");
+                    } else {
+                        voiceFeedback.textContent = "Error occurred in recognition: " + event.error;
+                    }
+                };
+                
+                recognition.onend = function() {
+                    isListening = false;
+                    voiceBtn.classList.remove('recording');
+                    
+                    if (finalTranscript) {
+                        // Auto-populate the message input with the transcribed text
+                        messageInput.value = finalTranscript;
+                        voiceFeedback.textContent = "Voice input complete. Click send or edit your message.";
+                        
+                        // Provide feedback on the voice input
+                        provideVoiceFeedback(finalTranscript);
+                        
+                        // Reset for next use
+                        finalTranscript = '';
+                    } else {
+                        voiceFeedback.textContent = "Click the microphone button to start voice input";
+                    }
+                };
+            } else {
+                // Browser doesn't support speech recognition
+                voiceBtn.disabled = true;
+                voiceFeedback.textContent = "Voice recognition not supported in this browser";
+                showNotification("Your browser doesn't support voice recognition. Try Chrome or Edge.", "warning");
+            }
+        }
+
+        // Provide feedback on voice input
+        function provideVoiceFeedback(transcript) {
+            const wordCount = transcript.split(' ').length;
+            let feedback = "";
+            
+            if (wordCount < 10) {
+                feedback = "Your input is quite brief. Try to elaborate more on your point.";
+            } else if (wordCount < 20) {
+                feedback = "Good start. Consider adding more details or examples to strengthen your argument.";
+            } else if (wordCount < 40) {
+                feedback = "Well-articulated point with good structure.";
+            } else {
+                feedback = "Comprehensive response with detailed reasoning.";
+            }
+            
+            // Check for common discussion skills
+            if (transcript.toLowerCase().includes("i agree") || transcript.toLowerCase().includes("i disagree")) {
+                feedback += " Good use of agreement/disagreement language.";
+            }
+            
+            if (transcript.toLowerCase().includes("for example") || transcript.toLowerCase().includes("such as")) {
+                feedback += " Excellent use of examples to support your point.";
+            }
+            
+            if (transcript.toLowerCase().includes("however") || transcript.toLowerCase().includes("on the other hand")) {
+                feedback += " Good use of contrasting viewpoints to show critical thinking.";
+            }
+            
+            showNotification(feedback, "success");
+        }
+
+        // Toggle voice recognition
+        function toggleVoiceRecognition() {
+            if (!recognition) {
+                showNotification("Voice recognition is not available in your browser.", "error");
+                return;
+            }
+            
+            if (isListening) {
+                recognition.stop();
+            } else {
+                finalTranscript = '';
+                recognition.start();
+            }
+        }
+
+        // Render participants list
+        function renderParticipants() {
+            participantsList.innerHTML = '';
+            participants.forEach(participant => {
+                const participantEl = document.createElement('div');
+                participantEl.className = 'participant';
+                participantEl.innerHTML = `
+                    <div class="participant-avatar">P${participant.id}</div>
+                    <div class="participant-info">
+                        <h4>${participant.name}</h4>
+                        <p>${participant.role}</p>
+                    </div>
+                    <div class="participant-status ${participant.status === 'speaking' ? 'status-speaking' : 'status-online'}"></div>
+                `;
+                participantsList.appendChild(participantEl);
+            });
+        }
+
+        // Start AI discussion with timed messages
+        function startAIDiscussion() {
+            let messageCount = 2; // We already have 2 initial messages
+            
+            // Add AI messages at intervals
+            const aiInterval = setInterval(() => {
+                if (messageCount >= 15) {
+                    clearInterval(aiInterval);
+                    return;
+                }
+                
+                addAIMessage();
+                messageCount++;
+            }, 8000);
+        }
+
+        // Add an AI message to the discussion
+        function addAIMessage() {
+            const currentTopic = topicSelect.value;
+            const messages = aiMessagesByTopic[currentTopic] || aiMessagesByTopic["ai-employment"];
+            
+            const randomParticipant = participants[Math.floor(Math.random() * participants.length)];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            // Show typing indicator
+            typingIndicator.style.display = 'flex';
+            
+            // Simulate typing delay
+            setTimeout(() => {
+                typingIndicator.style.display = 'none';
+                
+                // Update participant status to speaking
+                updateParticipantStatus(randomParticipant.id, 'speaking');
+                
+                // Add message to discussion
+                addMessage(randomParticipant, randomMessage, 'ai');
+                
+                // Reset participant status after a delay
+                setTimeout(() => {
+                    updateParticipantStatus(randomParticipant.id, 'online');
+                }, 3000);
+            }, 2000);
+        }
+
+        // Add a message to the discussion area
+        function addMessage(participant, text, type) {
+            const messageEl = document.createElement('div');
+            messageEl.className = 'message ' + type;
+            
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            messageEl.innerHTML = `
+                <div class="message-avatar">P${participant.id}</div>
+                <div class="message-content">
+                    <div class="message-name">${participant.name} (${type === 'user' ? 'You' : 'AI'})</div>
+                    <div class="message-text">${text}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+            
+            discussionArea.appendChild(messageEl);
+            discussionArea.scrollTop = discussionArea.scrollHeight;
+        }
+
+        // Update participant status
+        function updateParticipantStatus(participantId, status) {
+            const participant = participants.find(p => p.id === participantId);
+            if (participant) {
+                participant.status = status;
+                renderParticipants();
+            }
+        }
+
+        // Update topic when selected
+        function updateTopic() {
+            const selectedTopic = topicSelect.value;
+            const topic = topics[selectedTopic];
+            
+            if (topic) {
+                topicCard.innerHTML = `
+                    <h3 class="topic-title">${topic.title}</h3>
+                    <p class="topic-source">Topic Source: ${topic.source}</p>
+                    <p class="topic-description">${topic.description}</p>
+                `;
+                
+                // Clear the discussion area except for the first two messages
+                const messages = discussionArea.querySelectorAll('.message');
+                for (let i = 2; i < messages.length; i++) {
+                    messages[i].remove();
+                }
+                
+                showNotification(`Topic changed to: ${topic.title}`);
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Send message on button click
+            sendBtn.addEventListener('click', sendMessage);
+            
+            // Send message on Enter key (with Shift for new line)
+            messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Timer controls
+            startTimerBtn.addEventListener('click', startTimer);
+            pauseTimerBtn.addEventListener('click', pauseTimer);
+            resetTimerBtn.addEventListener('click', resetTimer);
+            
+            // Voice button
+            voiceBtn.addEventListener('click', toggleVoiceRecognition);
+            
+            // Topic selector
+            topicSelect.addEventListener('change', updateTopic);
+            
+            // Feature buttons
+            document.getElementById('voice-feature').addEventListener('click', () => {
+                showNotification("Voice input feature activated. Click the microphone icon when ready.");
+            });
+            
+            document.getElementById('analysis-feature').addEventListener('click', () => {
+                showNotification("Performance analysis: You've made 2 contributions. Try to speak more to improve your score.");
+            });
+            
+            document.getElementById('transcript-feature').addEventListener('click', () => {
+                showNotification("Discussion transcript downloaded successfully!");
+            });
+            
+            document.getElementById('hint-feature').addEventListener('click', () => {
+                const currentTopic = topicSelect.value;
+                const hints = {
+                    "ai-employment": "Hint: Consider discussing specific industries that will be most affected by AI, and potential solutions for workforce transition.",
+                    "remote-work": "Hint: Compare the benefits and challenges of remote work for different types of roles and industries.",
+                    "sustainability": "Hint: Discuss how sustainability initiatives can actually improve profitability, not just be a cost center.",
+                    "data-privacy": "Hint: Consider the trade-offs between personalized services and privacy protection.",
+                    "diversity": "Hint: Discuss both the business case and moral imperative for diversity initiatives.",
+                    "crypto": "Hint: Consider both the technological potential and regulatory challenges of cryptocurrencies.",
+                    "metaverse": "Hint: Discuss practical applications beyond entertainment and the technological hurdles to overcome."
+                };
+                
+                showNotification(hints[currentTopic] || "Hint: Try to connect the topic to current events or personal experiences.");
+            });
+        }
+
+        // Send user message
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            
+            if (message.length < 50) {
+                showNotification("Please enter at least 50 characters for your opinion.", "error");
+                return;
+            }
+            
+            // Add user message
+            addMessage({id: 'You', name: 'You'}, message, 'user');
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Show notification
+            showNotification("Your opinion has been shared with the group!");
+            
+            // AI will respond after a delay
+            setTimeout(() => {
+                addAIMessage();
+            }, 5000);
+        }
+
+        // Timer functions
+        function startTimer() {
+            if (timerRunning) return;
+            
+            timerRunning = true;
+            timerInterval = setInterval(updateTimer, 1000);
+            showNotification("Discussion timer started!");
+        }
+
+        function pauseTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+            showNotification("Discussion timer paused.");
+        }
+
+        function resetTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+            timeLeft = 15 * 60;
+            updateTimerDisplay();
+            showNotification("Discussion timer reset to 15 minutes.");
+        }
+
+        function updateTimer() {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                showNotification("Time's up! The discussion has ended.", "warning");
+                return;
+            }
+            
+            timeLeft--;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+        }
+
+        // Show notification
+        function showNotification(message, type = "success") {
+            notificationText.textContent = message;
+            notification.className = 'notification';
+            notification.classList.add(type);
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Initialize the application when the page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

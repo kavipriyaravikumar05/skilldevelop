@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerPrep | Profile Builder</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #e63946;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7ff 0%, #e6e9ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Styles */
+        .form-container {
+            width: 100%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .form-header h1 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+        }
+
+        .form-header p {
+            color: var(--gray);
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: #c1121f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--light-gray);
+            z-index: 1;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: var(--progress, 0%);
+            height: 4px;
+            background: var(--primary);
+            z-index: 2;
+            transition: width 0.5s ease;
+        }
+
+        .step {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: var(--gray);
+            z-index: 3;
+            transition: var(--transition);
+        }
+
+        .step.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: white;
+        }
+
+        .step.completed {
+            border-color: var(--success);
+            background: var(--success);
+            color: white;
+        }
+
+        .step-label {
+            position: absolute;
+            top: 40px;
+            font-size: 12px;
+            color: var(--gray);
+            width: 100px;
+            text-align: center;
+            left: -30px;
+        }
+
+        .form-step {
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(247, 37, 133, 0.2);
+            outline: none;
+            background: white;
+        }
+
+        .form-control.error {
+            border-color: var(--danger);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e11570;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(247, 37, 133, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(67, 97, 238, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .skill-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .skill-input-container input {
+            flex: 1;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .skill-tag {
+            background: var(--light);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .skill-tag i {
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .skill-tag i:hover {
+            color: var(--accent);
+        }
+
+        /* Image Upload Styles */
+        .image-upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .image-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px dashed var(--light-gray);
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f8f9fa;
+            transition: var(--transition);
+        }
+
+        .image-preview:hover {
+            border-color: var(--primary);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .image-preview .placeholder {
+            text-align: center;
+            color: var(--gray);
+        }
+
+        .image-preview .placeholder i {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .upload-btn {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .upload-btn:hover::before {
+            left: 100%;
+        }
+
+        .upload-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .upload-btn input {
+            display: none;
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .image-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .image-action-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Profile Preview Styles */
+        .profile-preview {
+            display: none;
+            width: 100%;
+        }
+
+        .profile-sidebar {
+            width: 300px;
+            background: var(--gradient-1);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-sidebar::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-sidebar::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            transition: var(--transition);
+            background: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+            border-color: var(--accent);
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .profile-image .placeholder {
+            font-size: 40px;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .profile-title {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .stat {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .profile-menu {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: var(--accent);
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Main Content Styles */
+        .profile-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .content-section {
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: var(--dark);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-gray);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 18px;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .skill-item {
+            margin-bottom: 15px;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .skill-name {
+            font-weight: 500;
+        }
+
+        .skill-percent {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .skill-bar {
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 1.5s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .badge {
+            background: var(--light);
+            color: var(--dark);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge i {
+            margin-right: 5px;
+            color: var(--warning);
+        }
+
+        .course-card {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-image {
+            width: 120px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+
+        .course-content {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .course-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .course-info {
+            display: flex;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .course-info span {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .course-info i {
+            margin-right: 5px;
+        }
+
+        .progress-container {
+            margin-top: 10px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .progress-bar-small {
+            height: 6px;
+            background: var(--light-gray);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--success);
+            border-radius: 3px;
+            transition: width 1.5s ease-in-out;
+        }
+
+        .message-box {
+            background: var(--gradient-3);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(76, 201, 240, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0); }
+        }
+
+        .message-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .message-text {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* Floating Shapes */
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            width: 200px;
+            height: 200px;
+            background: var(--primary);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            background: var(--accent);
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .shape-3 {
+            width: 100px;
+            height: 100px;
+            background: var(--secondary);
+            bottom: 20%;
+            left: 15%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .profile-sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+            
+            .profile-stats {
+                justify-content: space-around;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .logout-btn {
+                position: relative;
+                margin-bottom: 15px;
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+    
+    <div class="container">
+        <!-- Form Container -->
+        <div class="form-container" id="formContainer">
+            <div class="form-header">
+                <h1>Build Your Professional Profile</h1>
+                <p>Complete the following steps to create your job-ready profile</p>
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="step active" id="step1">1</div>
+                <div class="step" id="step2">2</div>
+                <div class="step" id="step3">3</div>
+                <div class="step" id="step4">4</div>
+                <div class="step" id="step5">5</div>
+            </div>
+            
+            <!-- Step 1: Personal Information -->
+            <div class="form-step active" id="step1-form">
+                <h2>Personal Information</h2>
+                <p class="form-description">Let's start with your basic details</p>
+                
+                <!-- Profile Image Upload -->
+                <div class="image-upload-container">
+                    <div class="image-preview" id="imagePreview">
+                        <img id="previewImage" src="" alt="Profile Preview">
+                        <div class="placeholder">
+                            <i class="fas fa-user"></i>
+                            <div>No Image Selected</div>
+                        </div>
+                    </div>
+                    <label class="upload-btn">
+                        <i class="fas fa-upload"></i> Upload Photo
+                        <input type="file" id="imageUpload" accept="image/*">
+                    </label>
+                    <div class="image-actions">
+                        <button class="image-action-btn" id="removeImage" style="display: none;">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email">
+                        <div class="error-message" id="emailError">Please enter a valid email address with @ symbol</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" class="form-control" placeholder="City, Country">
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" class="form-control">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobTitle">Professional Title</label>
+                    <input type="text" id="jobTitle" class="form-control" placeholder="e.g. Software Engineer">
+                </div>
+                
+                <div class="form-group">
+                    <label for="careerObjective">Career Objective</label>
+                    <textarea id="careerObjective" class="form-control" rows="4" placeholder="Briefly describe your career goals and aspirations"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <div></div> <!-- Empty div for spacing -->
+                    <button class="btn btn-primary" onclick="validateStep1()">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Education -->
+            <div class="form-step" id="step2-form">
+                <h2>Education</h2>
+                <p class="form-description">Add your educational background</p>
+                
+                <div class="form-group">
+                    <label for="highestDegree">Highest Degree</label>
+                    <select id="highestDegree" class="form-control">
+                        <option value="">Select your highest degree</option>
+                        <option value="High School">High School</option>
+                        <option value="Associate Degree">Associate Degree</option>
+                        <option value="Bachelor's Degree">Bachelor's Degree</option>
+                        <option value="Master's Degree">Master's Degree</option>
+                        <option value="Doctorate">Doctorate</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fieldOfStudy">Field of Study</label>
+                    <input type="text" id="fieldOfStudy" class="form-control" placeholder="e.g. Computer Science">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="institution">Institution</label>
+                        <input type="text" id="institution" class="form-control" placeholder="University or College name">
+                    </div>
+                    <div class="form-group">
+                        <label for="graduationYear">Graduation Year</label>
+                        <input type="number" id="graduationYear" class="form-control" placeholder="YYYY" min="1950" max="2030">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gpa">GPA or Percentage</label>
+                    <input type="text" id="gpa" class="form-control" placeholder="e.g. 3.8/4.0 or 85%">
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-outline" onclick="prevStep(1)"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button class="btn btn-primary" onclick="nextStep(3)">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Skills -->
+            <div class="form-step" id="step3-form">
+                <h2>Skills</h2>
+                <p class="form-description">Add your technical and professional skills</p>
+                
+                <div class="form-group">
+                    <label>Technical Skills</label>
+                    <div class="skill-input-container">
+                        <input type="text" id="skillInput" class="form-control" placeholder="e.g. JavaScript, Python, React">
+                        <button type="button" class="btn btn-primary" onclick="addSkill()">Add</button>
+                    </div>
+                    <div class="skill-tags" id="technicalSkills"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Professional Skills</label>
+                    <div class="skill-input-container">
+                        <input type="text" id="profSkillInput" class="form-control" placeholder="e.g. Communication, Leadership">
+                        <button type="button" class="btn btn-primary" onclick="addProfSkill()">Add</button>
+                    </div>
+                    <div class="skill-tags" id="professionalSkills"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="languages">Languages</label>
+                    <input type="text" id="languages" class="form-control" placeholder="e.g. English, Hindi, Spanish">
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-outline" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button class="btn btn-primary" onclick="nextStep(4)">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Experience -->
+            <div class="form-step" id="step4-form">
+                <h2>Work Experience</h2>
+                <p class="form-description">Add your professional work experience</p>
+                
+                <div class="form-group">
+                    <label for="jobTitleExp">Job Title</label>
+                    <input type="text" id="jobTitleExp" class="form-control" placeholder="e.g. Software Developer">
+                </div>
+                
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" class="form-control" placeholder="Company name">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="month" id="startDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="month" id="endDate" class="form-control">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="responsibilities">Responsibilities</label>
+                    <textarea id="responsibilities" class="form-control" rows="4" placeholder="Describe your key responsibilities and achievements"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-outline" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button class="btn btn-primary" onclick="nextStep(5)">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <!-- Step 5: Courses & Certifications -->
+            <div class="form-step" id="step5-form">
+                <h2>Courses & Certifications</h2>
+                <p class="form-description">Add relevant courses and certifications</p>
+                
+                <div class="form-group">
+                    <label for="courseName">Course Name</label>
+                    <input type="text" id="courseName" class="form-control" placeholder="e.g. Full Stack Web Development">
+                </div>
+                
+                <div class="form-group">
+                    <label for="courseProvider">Provider</label>
+                    <input type="text" id="courseProvider" class="form-control" placeholder="e.g. Coursera, Udemy">
+                </div>
+                
+                <div class="form-group">
+                    <label for="completionDate">Completion Date</label>
+                    <input type="month" id="completionDate" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="courseDescription">Description</label>
+                    <textarea id="courseDescription" class="form-control" rows="3" placeholder="Brief description of the course"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-outline" onclick="prevStep(4)"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button class="btn btn-primary" onclick="generateProfile()">Generate Profile</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Preview -->
+        <div class="profile-preview" id="profilePreview">
+            <!-- Profile Sidebar -->
+            <div class="profile-sidebar">
+                <div class="profile-image" id="profileImagePreview">
+                    <img id="finalProfileImage" src="" alt="Profile Picture">
+                    <div class="placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <h2 class="profile-name" id="previewName">Rahul Sharma</h2>
+                <p class="profile-title" id="previewTitle">Software Engineer | Job Seeker</p>
+                
+                <div class="profile-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="profileScore">87%</div>
+                        <div class="stat-label">Profile Score</div>
+                    </div>
+                </div>
+                
+                <div class="profile-menu">
+                    <div class="menu-item active" data-target="overview">
+                        <i class="fas fa-user"></i> Overview
+                    </div>
+                    <div class="menu-item" data-target="education">
+                        <i class="fas fa-graduation-cap"></i> Education
+                    </div>
+                    <div class="menu-item" data-target="skills">
+                        <i class="fas fa-code"></i> Skills
+                    </div>
+                    <div class="menu-item" data-target="experience">
+                        <i class="fas fa-briefcase"></i> Experience
+                    </div>
+                    <div class="menu-item" data-target="courses">
+                        <i class="fas fa-book-open"></i> Courses
+                    </div>
+                </div>
+                
+                <!-- Previous Button at the end -->
+                <div style="margin-top: auto; width: 100%; padding-top: 20px;">
+                    <button class="btn btn-outline" onclick="goBackToForm()" style="width: 100%;">
+                        <i class="fas fa-arrow-left"></i> Back to Form
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Profile Content -->
+            <div class="profile-content">
+                <!-- Overview Section -->
+                <div class="content-section active" id="overview">
+                    <h2 class="section-title">Profile Overview</h2>
+                    
+                    <div class="info-card">
+                        <h3 class="card-title"><i class="fas fa-info-circle"></i> Personal Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Full Name</div>
+                                <div class="info-value" id="previewFullName">Rahul Sharma</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Email</div>
+                                <div class="info-value" id="previewEmail">rahul.sharma@example.com</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Phone</div>
+                                <div class="info-value" id="previewPhone">+91 98765 43210</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Location</div>
+                                <div class="info-value" id="previewLocation">Bangalore, India</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Date of Birth</div>
+                                <div class="info-value" id="previewDob">15 March 1995</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3 class="card-title"><i class="fas fa-bullseye"></i> Career Objective</h3>
+                        <p id="previewObjective">Seeking a challenging position in a reputable organization to expand my learnings, knowledge, and skills. Secure a responsible career opportunity to fully utilize my training and skills, while making a significant contribution to the success of the company.</p>
+                    </div>
+                    
+                    <div class="message-box">
+                        <h3 class="message-title" id="completionTitle">Profile Completion</h3>
+                        <p class="message-text" id="completionText">Your profile is 87% complete. Complete your profile to increase your chances of getting hired!</p>
+                    </div>
+                </div>
+                
+                <!-- Education Section -->
+                <div class="content-section" id="education">
+                    <h2 class="section-title">Education</h2>
+                    
+                    <div class="info-card">
+                        <h3 class="card-title"><i class="fas fa-university"></i> <span id="previewDegree">Master of Computer Applications</span></h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">University</div>
+                                <div class="info-value" id="previewInstitution">Indian Institute of Technology, Delhi</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Duration</div>
+                                <div class="info-value" id="previewGradYear">2016 - 2019</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Field of Study</div>
+                                <div class="info-value" id="previewField">Computer Science</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">GPA/Percentage</div>
+                                <div class="info-value" id="previewGpa">8.7/10</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Skills Section -->
+                <div class="content-section" id="skills">
+                    <h2 class="section-title">Technical Skills</h2>
+                    
+                    <div class="info-card">
+                        <h3 class="card-title"><i class="fas fa-laptop-code"></i> Programming Languages & Technologies</h3>
+                        <div class="badge-container" id="previewTechSkills">
+                            <!-- Skills will be added here dynamically -->
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3 class="card-title"><i class="fas fa-users"></i> Professional Skills</h3>
+                        <div class="badge-container" id="previewProfSkills">
+                            <!-- Skills will be added here dynamically -->
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3 class="card-title"><i class="fas fa-language"></i> Languages</h3>
+                        <div class="badge-container" id="previewLanguages">
+                            <!-- Languages will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Experience Section -->
+                <div class="content-section" id="experience">
+                    <h2 class="section-title">Work Experience</h2>
+                    
+                    <div class="info-card">
+                        <h3 class="card-title"><i class="fas fa-briefcase"></i> <span id="previewJobTitle">Software Engineer</span></h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Company</div>
+                                <div class="info-value" id="previewCompany">Tech Solutions Inc.</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Duration</div>
+                                <div class="info-value" id="previewDuration">Jan 2020 - Present</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Location</div>
+                                <div class="info-value" id="previewJobLocation">Bangalore, India</div>
+                            </div>
+                        </div>
+                        <div class="info-item" style="margin-top: 15px;">
+                            <div class="info-label">Responsibilities</div>
+                            <div class="info-value">
+                                <ul style="padding-left: 20px; margin-top: 5px;" id="previewResponsibilities">
+                                    <!-- Responsibilities will be added here dynamically -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Courses Section -->
+                <div class="content-section" id="courses">
+                    <h2 class="section-title">Courses & Certifications</h2>
+                    
+                    <div class="course-card">
+                        <div class="course-image">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="course-content">
+                            <h3 class="course-title" id="previewCourseName">Full Stack Web Development</h3>
+                            <div class="course-info">
+                                <span><i class="fas fa-university"></i> <span id="previewCourseProvider">Coursera</span></span>
+                                <span><i class="far fa-calendar-alt"></i> Completed: <span id="previewCourseDate">Jan 2023</span></span>
+                            </div>
+                            <p id="previewCourseDesc">Comprehensive course covering front-end and back-end technologies including HTML, CSS, JavaScript, React, Node.js, and MongoDB.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form Navigation
+        let currentStep = 1;
+        let profileImage = null;
+        
+        function updateProgressBar() {
+            const progressBar = document.querySelector('.progress-bar');
+            const steps = document.querySelectorAll('.step');
+            const progressPercentage = ((currentStep - 1) / (steps.length - 1)) * 100;
+            
+            progressBar.style.setProperty('--progress', `${progressPercentage}%`);
+            
+            steps.forEach((step, index) => {
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+        }
+        
+        function nextStep(step) {
+            document.getElementById(`step${currentStep}-form`).classList.remove('active');
+            document.getElementById(`step${step}-form`).classList.add('active');
+            currentStep = step;
+            updateProgressBar();
+        }
+        
+        function prevStep(step) {
+            document.getElementById(`step${currentStep}-form`).classList.remove('active');
+            document.getElementById(`step${step}-form`).classList.add('active');
+            currentStep = step;
+            updateProgressBar();
+        }
+        
+        // Email Validation for Step 1
+        function validateStep1() {
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('emailError');
+            const emailValue = emailInput.value.trim();
+            
+            // Check if email contains @ symbol
+            if (!emailValue.includes('@')) {
+                emailInput.classList.add('error');
+                emailError.style.display = 'block';
+                return false;
+            } else {
+                emailInput.classList.remove('error');
+                emailError.style.display = 'none';
+                nextStep(2);
+                return true;
+            }
+        }
+        
+        // Logout Functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            // Show confirmation dialog
+            if (confirm('Are you sure you want to logout?')) {
+                // In a real application, this would redirect to login page or clear session
+                alert('You have been logged out successfully!');
+                
+                // For demonstration purposes, we'll reset the form
+                document.getElementById('formContainer').style.display = 'flex';
+                document.getElementById('profilePreview').style.display = 'none';
+                currentStep = 1;
+                updateProgressBar();
+                
+                // Reset form fields
+                document.getElementById('fullName').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('phone').value = '';
+                document.getElementById('location').value = '';
+                document.getElementById('dob').value = '';
+                document.getElementById('jobTitle').value = '';
+                document.getElementById('careerObjective').value = '';
+                
+                // Reset image
+                profileImage = null;
+                document.getElementById('previewImage').src = '';
+                document.getElementById('previewImage').style.display = 'none';
+                document.querySelector('.image-preview .placeholder').style.display = 'flex';
+                document.getElementById('removeImage').style.display = 'none';
+                document.getElementById('imageUpload').value = '';
+                
+                // Reset skills
+                document.getElementById('technicalSkills').innerHTML = '';
+                document.getElementById('professionalSkills').innerHTML = '';
+                document.getElementById('languages').value = '';
+                
+                // Reset other form fields
+                document.getElementById('highestDegree').value = '';
+                document.getElementById('fieldOfStudy').value = '';
+                document.getElementById('institution').value = '';
+                document.getElementById('graduationYear').value = '';
+                document.getElementById('gpa').value = '';
+                document.getElementById('jobTitleExp').value = '';
+                document.getElementById('company').value = '';
+                document.getElementById('startDate').value = '';
+                document.getElementById('endDate').value = '';
+                document.getElementById('responsibilities').value = '';
+                document.getElementById('courseName').value = '';
+                document.getElementById('courseProvider').value = '';
+                document.getElementById('completionDate').value = '';
+                document.getElementById('courseDescription').value = '';
+                
+                // Reset error states
+                document.getElementById('email').classList.remove('error');
+                document.getElementById('emailError').style.display = 'none';
+            }
+        });
+        
+        // Image Upload Functionality
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Store the image data
+                    profileImage = e.target.result;
+                    
+                    // Update preview in form
+                    const previewImage = document.getElementById('previewImage');
+                    const placeholder = document.querySelector('.image-preview .placeholder');
+                    
+                    previewImage.src = profileImage;
+                    previewImage.style.display = 'block';
+                    placeholder.style.display = 'none';
+                    
+                    // Show remove button
+                    document.getElementById('removeImage').style.display = 'block';
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Remove Image
+        document.getElementById('removeImage').addEventListener('click', function() {
+            profileImage = null;
+            
+            const previewImage = document.getElementById('previewImage');
+            const placeholder = document.querySelector('.image-preview .placeholder');
+            
+            previewImage.src = '';
+            previewImage.style.display = 'none';
+            placeholder.style.display = 'flex';
+            
+            // Hide remove button
+            this.style.display = 'none';
+            
+            // Reset file input
+            document.getElementById('imageUpload').value = '';
+        });
+        
+        // Skills Management
+        function addSkill() {
+            const skillInput = document.getElementById('skillInput');
+            const skillValue = skillInput.value.trim();
+            
+            if (skillValue) {
+                const skillsContainer = document.getElementById('technicalSkills');
+                const skillTag = document.createElement('div');
+                skillTag.className = 'skill-tag';
+                skillTag.innerHTML = `
+                    ${skillValue}
+                    <i class="fas fa-times" onclick="removeSkill(this)"></i>
+                `;
+                skillsContainer.appendChild(skillTag);
+                skillInput.value = '';
+            }
+        }
+        
+        function addProfSkill() {
+            const skillInput = document.getElementById('profSkillInput');
+            const skillValue = skillInput.value.trim();
+            
+            if (skillValue) {
+                const skillsContainer = document.getElementById('professionalSkills');
+                const skillTag = document.createElement('div');
+                skillTag.className = 'skill-tag';
+                skillTag.innerHTML = `
+                    ${skillValue}
+                    <i class="fas fa-times" onclick="removeSkill(this)"></i>
+                `;
+                skillsContainer.appendChild(skillTag);
+                skillInput.value = '';
+            }
+        }
+        
+        function removeSkill(element) {
+            element.parentElement.remove();
+        }
+        
+        // Calculate Profile Completion Percentage
+        function calculateProfileCompletion(formData) {
+            let completion = 0;
+            const totalFields = 21; // Total number of important fields
+            
+            // Check each important field and add to completion percentage
+            if (formData.fullName) completion += 5;
+            if (formData.email) completion += 5;
+            if (formData.phone) completion += 5;
+            if (formData.location) completion += 5;
+            if (formData.dob) completion += 5;
+            if (formData.jobTitle) completion += 5;
+            if (formData.careerObjective) completion += 5;
+            if (formData.highestDegree) completion += 5;
+            if (formData.fieldOfStudy) completion += 5;
+            if (formData.institution) completion += 5;
+            if (formData.graduationYear) completion += 5;
+            if (formData.gpa) completion += 5;
+            if (formData.technicalSkills.length > 0) completion += 5;
+            if (formData.professionalSkills.length > 0) completion += 5;
+            if (formData.languages.length > 0) completion += 5;
+            if (formData.jobTitleExp) completion += 5;
+            if (formData.company) completion += 5;
+            if (formData.startDate) completion += 5;
+            if (formData.responsibilities) completion += 5;
+            if (formData.courseName) completion += 5;
+            if (formData.courseProvider) completion += 5;
+            
+            // Profile image adds 5% if present
+            if (profileImage) completion += 5;
+            
+            return Math.min(completion, 100); // Cap at 100%
+        }
+        
+        // Profile Generation
+        function generateProfile() {
+            // Collect form data
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                location: document.getElementById('location').value,
+                dob: formatDate(document.getElementById('dob').value),
+                jobTitle: document.getElementById('jobTitle').value,
+                careerObjective: document.getElementById('careerObjective').value,
+                highestDegree: document.getElementById('highestDegree').value,
+                fieldOfStudy: document.getElementById('fieldOfStudy').value,
+                institution: document.getElementById('institution').value,
+                graduationYear: document.getElementById('graduationYear').value,
+                gpa: document.getElementById('gpa').value,
+                technicalSkills: Array.from(document.querySelectorAll('#technicalSkills .skill-tag')).map(tag => tag.childNodes[0].textContent.trim()),
+                professionalSkills: Array.from(document.querySelectorAll('#professionalSkills .skill-tag')).map(tag => tag.childNodes[0].textContent.trim()),
+                languages: document.getElementById('languages').value.split(',').map(lang => lang.trim()),
+                jobTitleExp: document.getElementById('jobTitleExp').value,
+                company: document.getElementById('company').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                responsibilities: document.getElementById('responsibilities').value,
+                courseName: document.getElementById('courseName').value,
+                courseProvider: document.getElementById('courseProvider').value,
+                completionDate: document.getElementById('completionDate').value,
+                courseDescription: document.getElementById('courseDescription').value
+            };
+            
+            // Calculate profile completion percentage
+            const profileCompletion = calculateProfileCompletion(formData);
+            
+            // Update profile preview with form data
+            document.getElementById('previewName').textContent = formData.fullName || 'Your Name';
+            document.getElementById('previewTitle').textContent = formData.jobTitle || 'Professional';
+            document.getElementById('previewFullName').textContent = formData.fullName || 'Not specified';
+            document.getElementById('previewEmail').textContent = formData.email || 'Not specified';
+            document.getElementById('previewPhone').textContent = formData.phone || 'Not specified';
+            document.getElementById('previewLocation').textContent = formData.location || 'Not specified';
+            document.getElementById('previewDob').textContent = formData.dob || 'Not specified';
+            document.getElementById('previewObjective').textContent = formData.careerObjective || 'Not specified';
+            document.getElementById('previewDegree').textContent = formData.highestDegree || 'Not specified';
+            document.getElementById('previewInstitution').textContent = formData.institution || 'Not specified';
+            document.getElementById('previewGradYear').textContent = formData.graduationYear || 'Not specified';
+            document.getElementById('previewField').textContent = formData.fieldOfStudy || 'Not specified';
+            document.getElementById('previewGpa').textContent = formData.gpa || 'Not specified';
+            
+            // Update profile score
+            document.getElementById('profileScore').textContent = `${profileCompletion}%`;
+            
+            // Update completion message
+            const completionTitle = document.getElementById('completionTitle');
+            const completionText = document.getElementById('completionText');
+            
+            if (profileCompletion >= 90) {
+                completionTitle.textContent = 'Profile Complete!';
+                completionText.textContent = 'Your profile is looking great! You have a high chance of getting noticed by employers.';
+            } else if (profileCompletion >= 70) {
+                completionTitle.textContent = 'Good Progress';
+                completionText.textContent = 'Your profile is well on its way. Consider adding more details to increase your chances.';
+            } else {
+                completionTitle.textContent = 'Profile Incomplete';
+                completionText.textContent = 'Your profile needs more information. Complete all sections to maximize your job prospects.';
+            }
+            
+            // Update profile image
+            const finalProfileImage = document.getElementById('finalProfileImage');
+            const profileImagePlaceholder = document.querySelector('.profile-image .placeholder');
+            
+            if (profileImage) {
+                finalProfileImage.src = profileImage;
+                finalProfileImage.style.display = 'block';
+                profileImagePlaceholder.style.display = 'none';
+            } else {
+                finalProfileImage.style.display = 'none';
+                profileImagePlaceholder.style.display = 'flex';
+            }
+            
+            // Update skills
+            const techSkillsContainer = document.getElementById('previewTechSkills');
+            techSkillsContainer.innerHTML = '';
+            formData.technicalSkills.forEach(skill => {
+                const badge = document.createElement('div');
+                badge.className = 'badge';
+                badge.innerHTML = `<i class="fas fa-check"></i> ${skill}`;
+                techSkillsContainer.appendChild(badge);
+            });
+            
+            const profSkillsContainer = document.getElementById('previewProfSkills');
+            profSkillsContainer.innerHTML = '';
+            formData.professionalSkills.forEach(skill => {
+                const badge = document.createElement('div');
+                badge.className = 'badge';
+                badge.innerHTML = `<i class="fas fa-check"></i> ${skill}`;
+                profSkillsContainer.appendChild(badge);
+            });
+            
+            const languagesContainer = document.getElementById('previewLanguages');
+            languagesContainer.innerHTML = '';
+            formData.languages.forEach(lang => {
+                const badge = document.createElement('div');
+                badge.className = 'badge';
+                badge.innerHTML = `<i class="fas fa-check"></i> ${lang}`;
+                languagesContainer.appendChild(badge);
+            });
+            
+            // Update experience
+            document.getElementById('previewJobTitle').textContent = formData.jobTitleExp || 'Not specified';
+            document.getElementById('previewCompany').textContent = formData.company || 'Not specified';
+            document.getElementById('previewDuration').textContent = `${formatMonthYear(formData.startDate)} - ${formData.endDate ? formatMonthYear(formData.endDate) : 'Present'}`;
+            document.getElementById('previewJobLocation').textContent = formData.location || 'Not specified';
+            
+            const responsibilitiesList = document.getElementById('previewResponsibilities');
+            responsibilitiesList.innerHTML = '';
+            if (formData.responsibilities) {
+                const responsibilities = formData.responsibilities.split('\n');
+                responsibilities.forEach(resp => {
+                    if (resp.trim()) {
+                        const li = document.createElement('li');
+                        li.textContent = resp;
+                        responsibilitiesList.appendChild(li);
+                    }
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'No responsibilities specified';
+                responsibilitiesList.appendChild(li);
+            }
+            
+            // Update courses
+            document.getElementById('previewCourseName').textContent = formData.courseName || 'Not specified';
+            document.getElementById('previewCourseProvider').textContent = formData.courseProvider || 'Not specified';
+            document.getElementById('previewCourseDate').textContent = formatMonthYear(formData.completionDate) || 'Not specified';
+            document.getElementById('previewCourseDesc').textContent = formData.courseDescription || 'Not specified';
+            
+            // Show profile preview
+            document.getElementById('formContainer').style.display = 'none';
+            document.getElementById('profilePreview').style.display = 'flex';
+            
+            // Initialize profile navigation
+            initProfileNavigation();
+            
+            // Animate skill bars
+            animateSkillBars();
+        }
+        
+        // Go back to form from profile preview
+        function goBackToForm() {
+            document.getElementById('profilePreview').style.display = 'none';
+            document.getElementById('formContainer').style.display = 'flex';
+        }
+        
+        // Profile Navigation
+        function initProfileNavigation() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    
+                    // Remove active class from all menu items and sections
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    contentSections.forEach(s => s.classList.remove('active'));
+                    
+                    // Add active class to clicked menu item and corresponding section
+                    this.classList.add('active');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+        }
+        
+        // Utility Functions
+        function formatDate(dateString) {
+            if (!dateString) return 'Not specified';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+        
+        function formatMonthYear(dateString) {
+            if (!dateString) return 'Not specified';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        }
+        
+        function animateSkillBars() {
+            const skillBars = document.querySelectorAll('.skill-progress');
+            skillBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 300);
+            });
+        }
+        
+        // Initialize progress bar
+        updateProgressBar();
+    </script>
+</body>
+</html>
